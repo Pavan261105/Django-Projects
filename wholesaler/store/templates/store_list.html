@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    All Stores List
+{% endblock %}
+
+{% block content %}
+    <h1 class="text-center mt-3">👋🏻 Welcome to Wholesaler's market of India 👋🏻</h1>
+    <h3 class="text-center p-3 mt-3 mb-5">Here we are connecting and promoting Indian business to grow their business in entire India.</h3>
+    <div class="container">
+    {% if is_seller %}
+    <a class="btn btn-primary mb-4" href="{% url "store_create" %}">Create a store</a>
+    {% endif %}
+    <div class="container row d-flex justify-content-between align-content-center">
+    {% for store in stores %}
+      <div class="card gap-lg-3 mb-5" style="width: 18rem;">
+          {% if store.photo %}
+              <img src="{{ store.photo.url }}" class="card-img-top" alt="...">
+          {% else %}
+              <img src="{% static 'default.jpg' %}" class="card-img-top" alt="Default Image">
+          {% endif %}
+          <div class="card-body">
+                <h5 class="card-title">{{ store.company_name }}</h5>
+                <p class="card-text">{{ store.text }}</p>
+                {% if store.user == user %}
+                <a href="{% url 'product' store.id %}" class="btn btn-outline-secondary share-btn add_btn text-bg-success text-light">🛍 Products</a><hr>
+                <a href="{% url 'store_edit' store.id %}" class="btn btn-primary">Edit</a>
+                <a href="{% url 'store_delete' store.id %}" class="btn btn-danger mt-1">Delete</a>
+              {% endif %}
+                <a href="{% url 'buyer_store_products' store.id %}" class="btn btn-outline-primary mt-2">
+                View Products
+                </a>
+          </div>
+      </div>
+      {% endfor %}
+    </div>
+</div>
+    {% endblock %}

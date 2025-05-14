@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %} Home Page {% endblock %}
+{% block body_class %}index-page{% endblock %}
+
+<link rel="stylesheet" href="{% static 'styles.css' %}">
+
+{% block content %}
+<div class="bg-video-container bg-black">
+  <video autoplay muted loop playsinline class="bg-video">
+      <source src="{% static 'videos/backvideo.mp4' %}" type="video/mp4">
+      Your browser does not support the video tag.
+  </video>
+</div>
+  <div class="video-overlay-content text-center">
+    <div class="homeText">
+      <h1 class=''>👋🏻 Welcome to Wholesaler's market of India 👋🏻</h1>
+      <h3 class='p-3 mt-3'>🤝 Connecting Indian businesses across the nation</h3>
+    </div>
+      <div class="d-flex justify-content-center align-items-center gap-3 f_div">
+        <div class="seller_buyer">
+          <span class=" fs-5 fw-bold">Register as : </span>
+          <a href="{% url 'seller_register' %}"><button class="btn f_btn remove-body-bg m-2">Seller</button></a>
+          <a href="{% url 'buyer_register' %}"><button class="btn f_btn remove-body-bg m-2">Buyer</button></a>
+        </div>
+      </div>
+    </div>
+
+
+      {% comment %} Team Cards {% endcomment %}
+      <div class="card_container">
+        <h2 class="m-5 team_text">Our Team Experts</h2>
+        <div class="team d-flex justify-content-center m-5">
+          <div class="container d-flex justify-content-evenly">
+          <div class="card">
+            <img src="{% static 'images/person_1.jpg' %}" alt="LinkedIn Marketing Expert">
+              <div class="card_content">
+                  <h4 class="person_name">Ravi Patel</h4>
+                  <p class="person_text">LinkedIn Marketing Expert</p>
+                  <a href="#"><i class="fas fa-share-alt share_icon"></i></a>
+              </div>
+          </div>
+          <div class="card">
+            <img src="{% static 'images/person_2.jpg' %}" alt="Field Sales Expert">
+              <div class="card_content">
+                  <h4 class="person_name">Anjali Sharma</h4>
+                  <p class="person_text">Field Sales Expert</p>
+                  <a href="#"><i class="fas fa-share-alt share_icon"></i></a>
+              </div>
+          </div>          
+          <div class="card">
+            <img src="{% static 'images/person_3.jpg' %}" alt="Senior Manager">
+              <div class="card_content">
+                  <h4 class="person_name">Uttam Kacha</h4>
+                  <p class="person_text">Senior Manager</p>
+                  <a href="#"><i class="fas fa-share-alt share_icon"></i></a>
+              </div>
+          </div>
+          <div class="card">
+            <img src="{% static 'images/person_4.jpg' %}" alt="CA - Chartered Accountant">
+              <div class="card_content">
+                  <h4 class="person_name">Harvi Patel</h4>
+                  <p class="person_text">CA - Chartered Accountant</p>
+                  <a href="#"><i class="fas fa-share-alt share_icon"></i></a>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<section class="why-us">
+  <div class="container container-why">
+    <div class="left_content">
+      <span class="text-warning fw-bold">WHY CHOOSE OUR SERVICE</span>
+      <h1>Preparing for your success<br>
+        provide best Business solutions.</h1>
+        <p>We have the technology and industry expertise to develop solutions that 
+          can connect people and businesses across variety of mobile devices
+        </p>
+        <p><i class="fa-solid fa-arrow-right why_icon"></i> Medicare Advantage Plans</p>
+        <p><i class="fa-solid fa-arrow-right why_icon"></i> Analysis & Research</p>
+        <p><i class="fa-solid fa-arrow-right why_icon"></i> 100% Money Growth</p>
+    </div>
+    <div class="right_images">
+      <img src="{% static 'images/Ambika Logo.jpg' %}" alt="" class='rounded-circle'>
+    </div>
+</div>
+</section>
+
+<div class="popup-overlay" id="popup">
+    <div class="popup-content text-dark">
+      <p style="width: max-content;">🙏🏼 Please Select Buyer or Seller 🙏🏼</p>
+      <button class="close-btn" onclick="closePopup()">Close</button>
+    </div>
+</div>
+{% endblock %}

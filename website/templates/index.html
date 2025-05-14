@@ -1,0 +1,41 @@
+{% extends "base.html" %} {% block title %} Home Page {% endblock %}
+{% block content %}
+<div class="text-center m-3">
+  <h1>Welcome to Ambika Traders</h1>
+  <h3>
+    Dear entrepruneurs, we welcome you to our family. Let's make a better
+    business together
+  </h3>
+</div>
+
+<div class="container text-center">
+  <div class="row d-flex align-items-center justify-content-center main">
+    {% for item in item|slice:":4" %}
+    <div
+      class="col-10 m-3 p-3 d-flex align-items-center justify-content-center box {% if forloop.counter|divisibleby:2 %} flex-row-reverse {% endif %}"
+    >
+      <div class="col-5">
+        <a href="{% url 'item_detail' item.slug %}">
+          <img
+            src="{{item.image.url}}"
+            alt=""
+            class="img-fluid img_hover"
+            style="width: 300px"
+        /></a>
+      </div>
+      <div class="col-5">
+        <h2>{{ item.name }}</h2>
+        <a href="https://api.whatsapp.com/send?phone=919979412610&text=Hello%2C%20I%20am%20interested%20in%20{{ item.name }}%20of%20this%20{{ item.get_type_display }}{% if item.variant %}%20with%20variant%20{{ item.variant }}{% endif %}!" target="_blank">
+          <button>WhatsApp Chat</button>
+        </a>
+        <br>
+        <a href="{% url 'item_detail' item.slug %}"><button class="m-2">More Detail</button></a>
+        <a href="#">
+          <button>Add to Cart</button>
+      </a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

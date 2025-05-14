@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Store Form
+{% endblock %}
+
+{% block content %}
+    <h1 class="text-center">👋🏻 Welcome to Wholesaler's market of India 👋🏻</h1>
+    <h3 class="text-center">Here we are connecting and promoting Indian business to grow their business in entire India.</h3>
+
+        {% if form.instance.pk %}
+            Edit Store
+        {% else %}
+            Store Description
+        {% endif %}
+
+        <form method="post" enctype = "multipart/form-data" class="form">
+            {% csrf_token %}
+            {{form.as_p}}
+            <button class="btn btn-warning" type="submit">Submit</button>
+        </form>
+        <a href="{% url "store_list" %}">Back to store list</a>
+{% endblock %}

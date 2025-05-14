@@ -1,0 +1,286 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+  {{ store.store_name }} Products
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4 fw-bold text-uppercase">{{ store.store_name }} - Product List</h2>
+
+    <!-- Buttons -->
+    <div class="d-flex flex-wrap justify-content-center mb-4">
+        <button type="button" class="btn btn-primary m-2" data-bs-toggle="modal" data-bs-target="#addProductModal">
+          ➕ Add Product
+        </button>
+        <button type="button" class="btn btn-warning m-2" data-bs-toggle="modal" data-bs-target="#moveProductsModal">
+            Move All Products to Branch
+        </button>
+        <a href="{% url 'seller_website' store.id %}" class="btn btn-secondary m-2">View My Public Store</a>
+    </div>
+
+    <!-- Category Filter Dropdown -->
+    <form method="get" class="text-center mb-4">
+        <div class="d-flex flex-wrap justify-content-center">
+            <select name="category" class="form-select w-auto me-2 mb-2">
+                <option value="all" {% if not selected_category or selected_category == 'all' %}selected{% endif %}>All Categories</option>
+                {% for category in categories %}
+                    <option value="{{ category.id }}" {% if selected_category == category.id|stringformat:"s" %}selected{% endif %}>{{ category.name }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit" class="btn btn-outline-primary mb-2">Filter</button>
+        </div>
+    </form>
+
+    <!-- ✅ Main Store Products -->
+    <div class="card mb-5 shadow">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Main Store Products</h4>
+        </div>
+        <div class="card-body">
+
+            {% if page_obj.object_list %}
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered text-center align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Product</th>
+                            <th>Product ID</th>
+                            <th>Price (₹)</th>
+                            <th>Stock Status</th>
+                            <th>Quantity</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for product in page_obj.object_list %}
+                        <tr>
+                            <td>
+                                <div class="d-flex flex-column align-items-center">
+                                    <div class="d-flex align-items-center justify-content-center mb-1">
+                                        {% if product.images.first %}
+                                            <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}" style="width:50px; height:50px; object-fit:cover; border-radius:8px; margin-right:10px;">
+                                        {% endif %}
+                                        <span>{{ product.name }}</span>
+                                        {% if product.category %}
+                                            <span class="badge bg-info text-dark m-2">{{ product.category.name }}</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                
+                            </td>
+                            <td>{{ product.product_id }}</td>
+                            <td>{{ product.price }}</td>
+                            <td>{{ product.stock_status|yesno:"In Stock,Out of Stock" }}</td>
+                            <td>{{ product.stock_quantity }}</td>
+                            <td>
+                                <a href="{% url 'edit_product' product.id %}" class="btn btn-sm btn-warning">Edit</a>
+                                <a href="{% url 'delete_product' product.id %}" class="btn btn-sm btn-danger">Remove</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination Controls -->
+            <nav class="d-flex justify-content-center">
+                <ul class="pagination">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}">Previous</a>
+                        </li>
+                    {% endif %}
+                    <li class="page-item disabled">
+                        <span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                    </li>
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}">Next</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+
+            {% else %}
+                <p class="text-muted">No products in main store.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- ✅ Branch-wise Products -->
+    {% for branch, page_obj in branch_products %}
+<div class="card mb-5 shadow">
+    <div class="card-header bg-success text-white">
+        <h4 class="mb-0">{{ branch.name }} Branch Products</h4>
+    </div>
+    <div class="card-body">
+        {% if page_obj.object_list %}
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered text-center align-middle">
+                <thead class="table-dark">
+                  <tr>
+                    <th>Product</th>
+                    <th>Product ID</th>
+                    <th>Price (₹)</th>
+                    <th>Stock Status</th>
+                    <th>Quantity</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for product in page_obj.object_list %}
+                  <tr>
+                    <td>
+                      <div class="d-flex align-items-center justify-content-center">
+                        {% if product.images.first %}
+                            <img src="{{ product.images.first.image.url }}" alt="{{ product.name }}" style="width:50px; height:50px; object-fit:cover; border-radius:8px; margin-right:10px;">
+                        {% endif %}
+                        <span>{{ product.name }}</span>
+                      </div>
+                    </td>
+                    <td>{{ product.product_id }}</td>
+                    <td>{{ product.price }}</td>
+                    <td>{{ product.stock_status|yesno:"In Stock,Out of Stock" }}</td>
+                    <td>{{ product.stock_quantity }}</td>
+                    <td>
+                      <a href="{% url 'edit_product' product.id %}" class="btn btn-sm btn-warning">Edit</a>
+                      <a href="{% url 'delete_product' product.id %}" class="btn btn-sm btn-danger">Remove</a>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+        </div>
+
+        <!-- Branch Pagination Controls -->
+        <nav class="d-flex justify-content-center">
+            <ul class="pagination">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?branch_page_{{ branch.id }}={{ page_obj.previous_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}">Previous</a>
+                    </li>
+                {% endif %}
+                <li class="page-item disabled">
+                    <span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                </li>
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?branch_page_{{ branch.id }}={{ page_obj.next_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}">Next</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+
+        {% else %}
+            <p class="text-muted">No products in this branch.</p>
+        {% endif %}
+    </div>
+</div>
+{% endfor %}
+
+
+
+</div>
+
+<!-- ✅ Unified Modal: Add Product to Store/Branch -->
+<div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="post" enctype="multipart/form-data" action="{% url 'add_product_store' store.id %}">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title" id="addProductModalLabel">Add Product</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+
+          {% if branches %}
+          <div class="mb-3">
+            <label class="form-label">Assign to Branch</label>
+            <select name="branch_id" class="form-select">
+              <option value="">Main Store</option>
+              {% for branch in branches %}
+              <option value="{{ branch.id }}">{{ branch.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          {% endif %}
+
+          <div class="mb-3">
+            <label class="form-label">Category</label>
+            <select name="category_id" class="form-select" required>
+              <option value="">Select Category</option>
+              {% for category in categories %}
+                <option value="{{ category.id }}">{{ category.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Product Name</label>
+            <input type="text" name="name" class="form-control" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Description</label>
+            <textarea name="description" class="form-control" rows="4"></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Price (₹)</label>
+            <input type="number" name="price" step="0.01" class="form-control" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Stock Quantity</label>
+            <input type="number" name="stock_quantity" class="form-control" min="0" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Product Images</label>
+            <input type="file" name="images" class="form-control" multiple required>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">Add Product</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+  
+  <!-- Modal: Move Products to Branch -->
+<div class="modal fade" id="moveProductsModal" tabindex="-1" aria-labelledby="moveProductsModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form method="post" action="{% url 'move_products_modal' store.id %}">
+          {% csrf_token %}
+          <div class="modal-header">
+            <h5 class="modal-title" id="moveProductsModalLabel">Move Products to Branch</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+  
+            <div class="mb-3">
+              <label class="form-label">Select Branch</label>
+              <select name="branch_id" class="form-select" required>
+                <option value="">Select Branch</option>
+                {% for branch in branches %}
+                <option value="{{ branch.id }}">{{ branch.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+  
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-warning">Move Products</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+{% endblock %}

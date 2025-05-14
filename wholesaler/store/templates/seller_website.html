@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}
+  {{store.store_name}}'s' Website
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2 class="mb-4 text-center">{{ store.store_name }}'s Products</h2>
+  <div class="row">
+    {% for product in products %}
+<div class="col-md-4 mb-4">
+    <div class="card h-100 shadow-sm">
+
+        {% if product.images.all %}
+        <!-- If product has multiple images, show carousel -->
+        <div id="carouselProduct{{ product.id }}" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                {% for image in product.images.all %}
+                <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                  <img src="{{ image.image.url }}" class="d-block w-100" alt="{{ product.name }}" style="height:250px; object-fit:contain; background-color: #f8f9fa;">
+                </div>
+                {% endfor %}
+            </div>
+            {% if product.images.count > 1 %}
+            <!-- Show carousel controls only if more than 1 image -->
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselProduct{{ product.id }}" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselProduct{{ product.id }}" data-bs-slide="next">
+                <span class="carousel-control-next-icon"></span>
+            </button>
+            {% endif %}
+        </div>
+        {% endif %}
+
+        <div class="card-body text-center">
+            <h5 class="card-title">{{ product.name }}</h5>
+            <p class="card-text"><strong>Price:</strong> ₹{{ product.price }}</p>
+            {% if product.stock_status %}
+                <span class="badge bg-success">In Stock ({{ product.stock_quantity }} units)</span>
+            {% else %}
+                <span class="badge bg-danger">Out of Stock</span>
+            {% endif %}
+
+        </div>
+
+    </div>
+</div>
+{% endfor %}
+
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    /* 🌑 Dark Gradient Background */
+    body {
+        background: linear-gradient(135deg, #141E30 0%, #243B55 100%);
+        min-height: 100vh;
+        background-attachment: fixed;
+        background-size: cover;
+        color: #ffffff;
+    }
+
+    /* 🌑 Smooth Fade Animation */
+    .fade-in-up {
+        animation: fadeInUp 1s ease forwards;
+        opacity: 0;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(40px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* 🌑 Glass Dark Card Styling */
+    .glass-card {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(15px);
+        border-radius: 20px;
+        box-shadow: 0px 12px 40px rgba(0, 0, 0, 0.5);
+        border: 1px solid rgba(255,255,255,0.1);
+        transition: all 0.3s ease;
+    }
+
+    .glass-card:hover {
+        transform: scale(1.02);
+        box-shadow: 0px 18px 50px rgba(0, 0, 0, 0.6);
+    }
+
+    /* 🌑 List group dark override */
+    .list-group-item {
+        background-color: transparent;
+        border: none;
+        color: #cccccc;
+        padding-left: 0;
+    }
+
+    .list-group-item::before {
+        content: "✔️";
+        margin-right: 8px;
+        color: #0dcaf0; /* Bootstrap Info color */
+    }
+
+</style>
+
+<div class="container py-5 fade-in-up" style="max-width: 1000px;">
+    <div class="card glass-card border-0 p-5">
+        
+        <h1 class="text-center fw-bold mb-4 text-info">About Us</h1>
+        
+        <p class="lead text-center text-muted mb-5">
+            Empowering businesses by connecting wholesale sellers and buyers across India through a seamless, trusted platform.
+        </p>
+
+        <div class="row g-5">
+            <div class="col-md-6">
+                <h4 class="fw-bold text-primary">Who We Are</h4>
+                <p class="text-muted">
+                    We are a passionate team of entrepreneurs, engineers, and designers who understand the challenges businesses face.
+                    Our goal is to simplify wholesale trading and give every business — small or big — a powerful online presence.
+                </p>
+            </div>
+            <div class="col-md-6">
+                <h4 class="fw-bold text-primary">Our Mission</h4>
+                <p class="text-muted">
+                    Our mission is to revolutionize the wholesale industry by making it accessible, transparent, and effortless.
+                    We provide sellers a place to showcase their products and buyers a safe, trusted environment to shop in bulk.
+                </p>
+            </div>
+        </div>
+
+        <div class="row g-5 mt-4">
+            <div class="col-md-6">
+                <h4 class="fw-bold text-primary">What We Offer</h4>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Create your personalized Store and Branches</li>
+                    <li class="list-group-item">Upload unlimited products with multiple images</li>
+                    <li class="list-group-item">Secure Buyer Registration and Product Viewing</li>
+                    <li class="list-group-item">Category-based Filtering and Smart Search</li>
+                    <li class="list-group-item">Seamless Branch and Product Management</li>
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <h4 class="fw-bold text-primary">Our Vision</h4>
+                <p class="text-muted">
+                    To become India’s #1 trusted online wholesale marketplace by empowering businesses with innovative technology,
+                    personalized store management, and strong customer relationships.
+                </p>
+            </div>
+        </div>
+
+        <div class="text-center mt-5">
+            <h5 class="fw-bold mb-3 text-success">Thank You for being part of our journey! 🚀</h5>
+            <p class="text-muted">Together, let's grow stronger, trade smarter, and build a better future.</p>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

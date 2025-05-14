@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    Product Add
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+
+    <h2 class="fw-bold mb-4">Add Product to Main Store</h2>
+
+    <div class="card shadow rounded-4">
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data" class="row g-3">
+                {% csrf_token %}
+
+                <div class="col-12">
+                    {{ product_form.as_p }}
+                </div>
+
+                <div class="col-12">
+                    <label class="form-label">Product Images (optional)</label>
+                    {{ formset.management_form }}
+                    {% for form in formset %}
+                        {{ form.image }}
+                    {% endfor %}
+                </div>
+
+                <div class="col-12 text-end">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="bi bi-plus-circle"></i> Add Product
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

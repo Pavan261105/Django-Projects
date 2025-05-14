@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ store.store_name }} - Catalog{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2 class="text-center mb-4 fw-bold text-uppercase">{{ store.store_name }} - Product Catalog</h2>
+
+  <!-- Filter: Category -->
+  <form method="get" class="mb-4 text-center">
+    <div class="d-flex flex-wrap justify-content-center">
+      <select name="category" class="form-select w-auto me-2">
+        <option value="all" {% if not selected_category or selected_category == 'all' %}selected{% endif %}>All Categories</option>
+        {% for category in categories %}
+          <option value="{{ category.id }}" {% if selected_category == category.id|stringformat:"s" %}selected{% endif %}>{{ category.name }}</option>
+        {% endfor %}
+      </select>
+      <button type="submit" class="btn btn-outline-primary">Filter</button>
+    </div>
+  </form>
+
+  <!-- Main Store Products -->
+  <div class="card shadow mb-5">
+    <div class="card-header bg-primary text-white">
+      <h5 class="mb-0">Main Store Products</h5>
+    </div>
+    <div class="card-body">
+      {% if page_obj.object_list %}
+      <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for product in page_obj.object_list %}
+        <div class="col">
+          <div class="card h-100">
+            {% if product.images.first %}
+              <img src="{{ product.images.first.image.url }}" class="card-img-top" style="height: 200px; object-fit: cover;" alt="{{ product.name }}">
+            {% endif %}
+            <div class="card-body">
+              <h5 class="card-title">{{ product.name }}</h5>
+              <p class="card-text">{{ product.description|truncatechars:80 }}</p>
+              <p class="fw-bold text-success">₹{{ product.price }}</p>
+              <span class="badge bg-{{ product.stock_status|yesno:'success,danger' }}">{{ product.stock_status|yesno:"In Stock,Out of Stock" }}</span>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- Pagination -->
+      <div class="d-flex justify-content-center mt-4">
+        <ul class="pagination">
+          {% if page_obj.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}">Previous</a></li>
+          {% endif %}
+          <li class="page-item disabled"><span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span></li>
+          {% if page_obj.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}{% if selected_category %}&category={{ selected_category }}{% endif %}">Next</a></li>
+          {% endif %}
+        </ul>
+      </div>
+
+      {% else %}
+        <p class="text-muted text-center">No products available in main store.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Branch Products -->
+  {% for branch, products in branch_products %}
+  <div class="card shadow mb-4">
+    <div class="card-header bg-success text-white">
+      <h5 class="mb-0">{{ branch.name }} Branch Products</h5>
+    </div>
+    <div class="card-body">
+      {% if products %}
+      <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for product in products %}
+        <div class="col">
+          <div class="card h-100">
+            {% if product.images.first %}
+            <img src="{{ product.images.first.image.url }}" class="card-img-top" style="max-height: 200px; width: 100%; object-fit: contain; background: #fff;" alt="{{ product.name }}">
+
+            {% endif %}
+            <div class="card-body">
+              <h5 class="card-title">{{ product.name }}</h5>
+              <p class="card-text">{{ product.description|truncatechars:80 }}</p>
+              <p class="fw-bold text-success">₹{{ product.price }}</p>
+              <span class="badge bg-{{ product.stock_status|yesno:'success,danger' }}">{{ product.stock_status|yesno:"In Stock,Out of Stock" }}</span>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+        <p class="text-muted">No products in this branch.</p>
+      {% endif %}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

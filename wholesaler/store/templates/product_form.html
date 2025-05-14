@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    Product Form
+{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h2 class="text-center mb-4">{{ action }} Product</h2>
+
+    <div class="card shadow-lg">
+        <div class="card-body">
+            <form method="POST" enctype="multipart/form-data" class="row g-3">
+                {% csrf_token %}
+
+                <!-- Product Form Fields -->
+                <div class="col-12">
+                    {{ product_form.non_field_errors }}
+                </div>
+
+                {% for field in product_form %}
+                    <div class="col-md-6">
+                        <label class="form-label">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.help_text %}
+                            <small class="form-text text-muted">{{ field.help_text }}</small>
+                        {% endif %}
+                        {% for error in field.errors %}
+                            <div class="text-danger">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+
+                <!-- Images Formset -->
+                {% if formset %}
+                <div class="col-12 mt-4">
+                    <h5 class="mb-3">Product Images</h5>
+                    {{ formset.management_form }}
+                    <div class="row">
+                        {% for form in formset %}
+                            <div class="col-md-4 mb-3">
+                                {{ form.as_p }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Submit Button -->
+                <div class="col-12 text-center mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        {% if action == 'Edit' %} Save Changes {% else %} Add Product {% endif %}
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Create Branch
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <h2>Create Branch for {{ store.store_name }}</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Create Branch</button>
+  </form>
+</div>
+{% endblock %}

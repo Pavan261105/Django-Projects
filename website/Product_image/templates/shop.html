@@ -1,0 +1,96 @@
+{% extends "base.html" %} {% block title %} Our Shop {% endblock %}
+{% block content %}
+<div class="container mt-5">
+  <h2 class="text-center text-light mb-4">Our Products</h2>
+
+  {% if item %}
+  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+    {% for i in item %}
+    <div class="col">
+      <div
+        class="card h-100 bg-dark border border-secondary text-light shadow-sm rounded-4 d-flex flex-column"
+      >
+        <img
+          src="{{ i.image.url }}"
+          class="card-img-top zoom-img rounded-top-4 img-fluid p-2"
+          alt="{{ i.name }}"
+          style="
+            max-height: 300px;
+            width: 100%;
+            object-fit: contain;
+            cursor: pointer;
+          "
+          data-bs-toggle="modal"
+          data-bs-target="#imageModal{{ forloop.counter }}"
+        />
+        <a href="{% url 'item_detail' i.slug %}" style="color:white; text-decoration : none;">
+          <div class="card-body d-flex flex-column">
+            <h3 class="card-title" style="color:white;">{{ i.name }}</h3>
+            <div
+              class="card-text mb-2"
+              style="
+                font-size: 0.9rem;
+                line-height: 1.4em;
+                max-height: 6em;
+                overflow: hidden;
+              "
+            >
+              {{ i.brief|safe }}
+            </div>
+  
+            <div class="mt-auto">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="badge bg-warning text-dark"
+                  >{{ i.get_type_display }}</span
+                >
+                {% if i.stock_status == 'Available' %}
+                <span class="badge bg-success">{{ i.stock_status }}</span>
+                {% else %}
+                <span class="badge bg-danger">{{ i.stock_status }}</span>
+                {% endif %}
+              </div>
+              <a
+                href="{% url 'item_detail' i.slug %}"
+                class="btn btn-outline-light w-100"
+                >View Details</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+        </a>
+    <!-- Image Modal -->
+    <div
+      class="modal fade"
+      id="imageModal{{ forloop.counter }}"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content bg-dark text-white">
+          <div class="modal-header border-0">
+            <h5 class="modal-title">{{ i.name }}</h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body text-center">
+            <img
+              src="{{ i.image.url }}"
+              class="img-fluid rounded"
+              style="max-height: 500px"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="alert alert-warning text-center mt-5">
+    No items found matching your search.
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "base.html" %} {% block title %} {{product.name}} {% endblock %}
+{% block content %}
+<div class="text-center m-3">
+  <h1>Welcome to Ambika Traders</h1>
+  <h3>
+    Dear entrepruneurs, we welcome you to our family. Let's make a better
+    business together
+  </h3>
+</div>
+
+<div class="container">
+  <div class="card custom-card">
+    <div class="row g-0 align-items-center">
+      <div class="col-md-6 text-center">
+        <img src="{{item.image.url}}" alt="" class="img-fluid">
+      </div>
+      <div class="col-md-6 d-flex">
+        <div class="card-body">
+          <h1 class="card-title">{{ item.name }}</h1>
+          <ul>
+            {% for feature in features %}
+            <li>{{ feature }}</li>
+            {% endfor %}
+          </ul>
+          <p class="card-text">{{ item.description|safe }}</p>
+          <a
+  href="https://api.whatsapp.com/send?phone=919979412610&text=Hello%2C%20I%20am%20interested%20in%20{{ item.name }}%20of%20this%20{{ item.get_type_display }}{% if item.variant %}%20with%20variant%20{{ item.variant }}{% endif %}!"
+  target="_blank"
+>
+  <button>WhatsApp Chat</button>
+</a>
+          <br>        
+          {% comment %} <a href="{% url 'home' %}"><button>Back</button></a> {% endcomment %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

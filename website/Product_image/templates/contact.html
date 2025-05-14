@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}
+Contact Us
+{% endblock %}
+
+{% block content %}
+<form method="post" class="form" onsubmit=showPopup()>
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Submit</button>
+    {% if success %}
+    <p style="color: green; font-weight: bold;">Your message has been sent successfully!</p>
+    {% endif %}
+</form>
+
+<section class="popup" id="popup">
+    <div class="square">
+        <div class="mini-square">
+            <strong>Form Submitted Successfully</strong>
+        </div>
+    </div>
+</section>
+
+<script>
+function showPopup() {
+    var popup = document.getElementById("popup");
+    popup.classList.add("show");
+
+    setTimeout(function() {
+        popup.classList.remove("show");
+    }, 3000); // Hide the popup after 3 seconds
+
+    return false; // Prevent actual form submission for demonstration purposes
+}
+</script>
+{% endblock %}

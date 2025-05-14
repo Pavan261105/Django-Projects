@@ -1,0 +1,133 @@
+
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Checkout{% endblock %}
+
+{% block content %}
+<style>
+  .payment-details {
+    display: none;
+    animation: fadeIn 0.4s ease-in;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .form-section {
+    {% comment %} background: #f8f9fa; {% endcomment %}
+    border-radius: 10px;
+    padding: 25px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.3);
+  }
+
+  .form-title {
+    font-weight: bold;
+    {% comment %} color: #333; {% endcomment %}
+    margin-bottom: 20px;
+  }
+
+  .highlight {
+    color: #0d6efd;
+    font-weight: 600;
+  }
+
+  .upi, .card {
+    margin-top: 10px;
+  }
+</style>
+
+<div class="container py-5">
+  <h2 class="text-center mb-5 text-uppercase fw-bold text-primary">🛒 Checkout</h2>
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-section">
+        <h5 class="form-title">Shipping Details</h5>
+        <form method="post">
+          {% csrf_token %}
+          <div class="mb-3">
+            {{ form.address.label_tag }} {{ form.address }}
+          </div>
+          <div class="mb-3">
+            {{ form.phone.label_tag }} {{ form.phone }}
+          </div>
+
+          <h5 class="form-title">💳 Payment Method</h5>
+          <div class="mb-3">
+            {% for choice in form.payment_method.field.choices %}
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="{{ form.payment_method.name }}" id="payment_{{ forloop.counter }}" value="{{ choice.0 }}"
+                  {% if form.payment_method.value == choice.0 %}checked{% endif %}>
+                <label class="form-check-label" for="payment_{{ forloop.counter }}">
+                  {{ choice.1 }}
+                </label>
+              </div>  
+            {% endfor %}
+          </div>
+          
+
+          <!-- Conditional Payment Fields -->
+          <div id="upi-fields" class="payment-details upi">
+            <label for="upi_id" class="form-label">Enter your UPI ID:</label>
+            <input type="text" class="form-control" placeholder="example@upi" />
+          </div>
+
+          <div id="card-fields" class="payment-details card">
+            <label class="form-label">Card Number:</label>
+            <input type="text" class="form-control mb-2" placeholder="XXXX-XXXX-XXXX-1234" />
+            <label class="form-label">Expiry:</label>
+            <input type="text" class="form-control" placeholder="MM/YY" />
+          </div>
+
+          <button type="submit" class="btn btn-success mt-4 w-100 fw-bold">Place Order</button>
+          <a href="{% url 'cart_detail' %}" class="btn btn-outline-secondary mt-2 w-100">Back to Cart</a>
+        </form>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="form-section">
+        <h5 class="form-title">Your Cart</h5>
+        <ul class="list-group mb-3">
+          {% for item in cart.items.all %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+              <strong>{{ item.product.name }}</strong> × {{ item.quantity }}
+            </div>
+            <span>₹{{ item.product.price|floatformat:2 }}</span>
+          </li>
+          {% endfor %}
+          <li class="list-group-item d-flex justify-content-between">
+            <strong>Total</strong>
+            <strong class="text-success">₹{{ cart.total_price }}</strong>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const radios = document.querySelectorAll('input[name="payment_method"]');
+    const upi = document.getElementById("upi-fields");
+    const card = document.getElementById("card-fields");
+
+    radios.forEach((r) => {
+      r.addEventListener("change", function () {
+        upi.style.display = "none";
+        card.style.display = "none";
+
+        if (r.value === "UPI") {
+          upi.style.display = "block";
+        } else if (r.value === "CARD") {
+          card.style.display = "block";
+        }
+      });
+
+      if (r.checked) r.dispatchEvent(new Event("change"));
+    });
+  });
+</script>
+{% endblock %}

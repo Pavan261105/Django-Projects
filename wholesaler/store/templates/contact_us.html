@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    /* 🌑 Dark Gradient Background */
+    body {
+        background: linear-gradient(135deg, #141E30 0%, #243B55 100%);
+        min-height: 100vh;
+        background-attachment: fixed;
+        background-size: cover;
+        color: #ffffff;
+    }
+
+    /* 🌑 Smooth Fade Animation */
+    .fade-in-up {
+        animation: fadeInUp 1s ease forwards;
+        opacity: 0;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(40px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* 🌑 Glass Card Styling */
+    .glass-card {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(15px);
+        border-radius: 20px;
+        box-shadow: 0px 12px 40px rgba(0, 0, 0, 0.5);
+        border: 1px solid rgba(255,255,255,0.1);
+        transition: all 0.4s ease;
+    }
+
+    .glass-card:hover {
+        transform: scale(1.02);
+        box-shadow: 0px 18px 50px rgba(0, 0, 0, 0.6);
+    }
+
+    /* ✨ Icon Hover */
+    .contact-icon {
+        transition: transform 0.3s ease, color 0.3s ease;
+        color: #adb5bd;
+    }
+    .contact-icon:hover {
+        transform: scale(1.2);
+        color: #0dcaf0; /* Bootstrap Info Color */
+    }
+
+    /* ✨ Floating Labels Adjustment */
+    .form-control {
+        background-color: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.2);
+        color: #fff;
+    }
+    .form-control::placeholder {
+        color: #bbb;
+    }
+    .form-control:focus {
+        background-color: rgba(255,255,255,0.08);
+        border-color: #0dcaf0;
+    }
+    label {
+        color: #ccc;
+    }
+
+</style>
+
+<div class="container py-5 fade-in-up" style="max-width: 950px;">
+    <div class="card glass-card border-0 p-5">
+
+        <h1 class="text-center fw-bold mb-4 text-info">Contact Us</h1>
+        <p class="lead text-center text-muted mb-5">
+            We'd love to hear from you. Whether you're a Seller, Buyer, or a Visitor — let's connect!
+        </p>
+
+        <form method="post" action="">
+            {% csrf_token %}
+            <div class="row g-4 mb-4">
+                <div class="col-md-6 form-floating">
+                    <input type="text" name="name" class="form-control shadow-sm" id="floatingName" placeholder="John Doe" required>
+                    <label for="floatingName">Your Name</label>
+                </div>
+                <div class="col-md-6 form-floating">
+                    <input type="email" name="email" class="form-control shadow-sm" id="floatingEmail" placeholder="name@example.com" required>
+                    <label for="floatingEmail">Your Email</label>
+                </div>
+            </div>
+
+            <div class="form-floating mb-4">
+                <input type="text" name="subject" class="form-control shadow-sm" id="floatingSubject" placeholder="Subject..." required>
+                <label for="floatingSubject">Subject</label>
+            </div>
+
+            <div class="form-floating mb-4">
+                <textarea name="message" class="form-control shadow-sm" placeholder="Write your message..." id="floatingMessage" style="height: 150px;" required></textarea>
+                <label for="floatingMessage">Your Message</label>
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-info btn-lg px-5">Send Message</button>
+            </div>
+        </form>
+
+        <hr class="my-5">
+
+        <div class="row text-center text-muted">
+            <div class="col-md-4 mb-4">
+                <i class="bi bi-geo-alt-fill fs-2 contact-icon"></i>
+                <p class="mt-2">Mumbai, Maharashtra, India</p>
+            </div>
+            <div class="col-md-4 mb-4">
+                <i class="bi bi-envelope-fill fs-2 contact-icon"></i>
+                <p class="mt-2">support@yourmarketplace.com</p>
+            </div>
+            <div class="col-md-4 mb-4">
+                <i class="bi bi-telephone-fill fs-2 contact-icon"></i>
+                <p class="mt-2">+91 9876543210</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
